@@ -1,0 +1,5 @@
+<!-- bg_rounded_blue.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#253291"/>
+    <corners android:radius="28dp"/>
+</shape>

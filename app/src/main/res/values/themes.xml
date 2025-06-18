@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme (Light) -->
+    <style name="Base.Theme.Project" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+    </style>
+
+    <style name="Theme.Project" parent="Base.Theme.Project" />
+
+    <!-- Generic ShapeAppearance overlay alias -->
+    <style name="ShapeAppearanceOverlay" parent="ShapeAppearanceOverlay.App" />
+
+    <!-- ShapeAppearance 오버레이 기본: 앱 전체에서 사용 -->
+    <style name="ShapeAppearanceOverlay.App">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- 원형 크롭용 -->
+    <style name="ShapeAppearanceOverlay.App.Circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- 카드형 크롭용 (16dp 라운드) -->
+    <style name="ShapeAppearanceOverlay.App.Card">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+</resources>
