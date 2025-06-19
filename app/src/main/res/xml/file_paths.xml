@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 앱 전용 외부 저장소 내 Pictures/ 폴더를 camera 앱에 허용 -->
+    <external-files-path
+        name="my_images"
+        path="Pictures/"/>
+</paths>

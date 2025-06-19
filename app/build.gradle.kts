@@ -3,6 +3,7 @@ plugins {
     // 루트 클래스패스에 이미 올라간 AGP Alpha 플러그인 사용
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -44,6 +45,8 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.4.1")
     implementation("androidx.activity:activity:1.9.1")
+    implementation ("com.github.bumptech.glide:glide:4.14.2")
+    kapt ("com.github.bumptech.glide:compiler:4.14.2")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
