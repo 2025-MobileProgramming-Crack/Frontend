@@ -44,7 +44,15 @@ class LoginActivity : AppCompatActivity() {
             RetrofitClient.instance.login(request).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
-                        val token = response.body()?.result?.jwtToken?.accessToken
+                        val accessToken = response.body()?.result?.jwtToken?.accessToken
+                        val refreshToken = response.body()?.result?.jwtToken?.refreshToken
+
+                        if (accessToken != null && refreshToken != null) {
+                            val editor = getSharedPreferences("auth", MODE_PRIVATE).edit()
+                            editor.putString("accessToken", accessToken)
+                            editor.putString("refreshToken", refreshToken)
+                            editor.apply()
+                        }
                         Toast.makeText(this@LoginActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                     } else {

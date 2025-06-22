@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -85,41 +86,24 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Time input -->
-    <EditText
-        android:id="@+id/etEventTime"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="시간"
-        android:textColorHint="#676B83"
-        android:textColor="#121317"
-        android:padding="16dp"
-        android:background="@drawable/bg_rounded_gray"
-        android:inputType="time"
-        app:layout_constraintTop_toBottomOf="@id/etEventDate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Content input -->
     <EditText
         android:id="@+id/etEventContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="내용"
-        android:textColorHint="#676B83"
-        android:textColor="#121317"
-        android:padding="16dp"
         android:background="@drawable/bg_rounded_gray"
+        android:hint="내용"
         android:inputType="textMultiLine"
         android:minLines="3"
-        app:layout_constraintTop_toBottomOf="@id/etEventTime"
+        android:padding="16dp"
+        android:textColor="#121317"
+        android:textColorHint="#676B83"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        tools:layout_editor_absoluteY="303dp" />
 
     <!-- Add button -->
     <Button

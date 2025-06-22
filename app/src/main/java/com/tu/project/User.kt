@@ -38,3 +38,18 @@ data class LoginResponse(
     val errorCode: String?,
     val success: Boolean
 )
+
+data class UserInfoResponse(
+    val message: String,
+    val result: UserInfo?,
+    val errorCode: String,
+    val success: Boolean
+)
+
+data class UserInfo(
+    val email: String,
+    val username: String,
+    val phoneNumber: String,
+    val region: String,
+    val profileImageUrl: String
+)

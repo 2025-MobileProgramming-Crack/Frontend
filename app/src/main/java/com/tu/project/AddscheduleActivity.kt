@@ -3,15 +3,17 @@ package com.tu.project
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.tu.project.R
 import com.tu.project.databinding.ActivityAddscheduleBinding
-
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddscheduleActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddscheduleBinding
@@ -24,23 +26,69 @@ class AddscheduleActivity : AppCompatActivity() {
 
         enableEdgeToEdge()
 
-        binding.ivBackArrow.setOnClickListener {
-            startActivity(Intent(this, CalendarActivity::class.java))
-            finish()
-        }
-
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // 뒤로가기
+        binding.ivBackArrow.setOnClickListener {
+            startActivity(Intent(this, CalendarActivity::class.java))
+            finish()
+        }
 
-        val logonButton: Button = findViewById(R.id.btnAddEvent)
-        logonButton.setOnClickListener {
-            val intent = Intent(this, CalendarActivity::class.java)
-            startActivity(intent)
+        // 추가 버튼 클릭 시 일정 추가 요청
+        binding.btnAddEvent.setOnClickListener {
+            val title = binding.etEventTitle.text.toString().trim()
+            val description = binding.etEventContent.text.toString().trim()
+            val dateStr = binding.etEventDate.text.toString().trim()
+
+            if (title.isEmpty() || dateStr.isEmpty() ) {
+                Toast.makeText(this, "제목, 날짜, 시간을 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val fullDateTime = try {
+                val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                val parsed = formatter.parse("$dateStr")
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
+                    timeZone = TimeZone.getTimeZone("UTC")
+                }.format(parsed!!)
+            } catch (e: Exception) {
+                Toast.makeText(this, "날짜 형식을 확인하세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val token = getSharedPreferences("auth", MODE_PRIVATE).getString("accessToken", null) ?: return@setOnClickListener
+            val isAdmin = getSharedPreferences("auth", MODE_PRIVATE).getBoolean("isAdmin", false)
+
+            val request = AddEventRequest(
+                title = title,
+                description = description,
+                date = fullDateTime
+            )
+
+            RetrofitClient.instance.addEvent("Bearer $token", request)
+                .enqueue(object : Callback<BasicResponse> {
+                    override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                        if (response.isSuccessful && response.body()?.success == true) {
+                            Toast.makeText(
+                                this@AddscheduleActivity,
+                                if (isAdmin) "전체 사용자에게 일정이 추가되었습니다." else "일정이 추가되었습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            startActivity(Intent(this@AddscheduleActivity, CalendarActivity::class.java))
+                            finish()
+                        } else {
+                            Toast.makeText(this@AddscheduleActivity, "일정 추가 실패", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+                        Toast.makeText(this@AddscheduleActivity, "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
         }
     }
 }
