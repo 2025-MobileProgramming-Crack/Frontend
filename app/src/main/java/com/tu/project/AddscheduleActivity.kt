@@ -10,22 +10,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.tu.project.R
+import com.tu.project.databinding.ActivityAddscheduleBinding
+
 
 class AddscheduleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityAddscheduleBinding
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityAddscheduleBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         enableEdgeToEdge()
-        setContentView(R.layout.activity_addschedule)
+
+        binding.ivBackArrow.setOnClickListener {
+            startActivity(Intent(this, CalendarActivity::class.java))
+            finish()
+        }
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        findViewById<ImageView>(R.id.ivBackArrow).setOnClickListener {
-            startActivity(Intent(this, CalendarActivity::class.java))
-            finish()
-        }
+
 
         val logonButton: Button = findViewById(R.id.btnAddEvent)
         logonButton.setOnClickListener {
