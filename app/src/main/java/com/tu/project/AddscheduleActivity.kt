@@ -1,8 +1,10 @@
 package com.tu.project
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -32,26 +34,41 @@ class AddscheduleActivity : AppCompatActivity() {
             insets
         }
 
-        // 뒤로가기
+        // ⬅️ 뒤로가기 버튼
         binding.ivBackArrow.setOnClickListener {
             startActivity(Intent(this, CalendarActivity::class.java))
             finish()
         }
 
-        // 추가 버튼 클릭 시 일정 추가 요청
+        // 📅 날짜 입력 클릭 시 DatePickerDialog 표시
+        binding.etEventDate.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            DatePickerDialog(
+                this,
+                { _, year, month, dayOfMonth ->
+                    val dateStr = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
+                    binding.etEventDate.setText(dateStr)
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+        // ➕ 일정 추가 버튼 클릭 시 서버 요청
         binding.btnAddEvent.setOnClickListener {
             val title = binding.etEventTitle.text.toString().trim()
             val description = binding.etEventContent.text.toString().trim()
             val dateStr = binding.etEventDate.text.toString().trim()
 
-            if (title.isEmpty() || dateStr.isEmpty() ) {
-                Toast.makeText(this, "제목, 날짜, 시간을 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+            if (title.isEmpty() || dateStr.isEmpty()) {
+                Toast.makeText(this, "제목과 날짜를 입력해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val fullDateTime = try {
-                val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-                val parsed = formatter.parse("$dateStr")
+                val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val parsed = formatter.parse(dateStr)
                 SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
                     timeZone = TimeZone.getTimeZone("UTC")
                 }.format(parsed!!)
@@ -60,7 +77,8 @@ class AddscheduleActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val token = getSharedPreferences("auth", MODE_PRIVATE).getString("accessToken", null) ?: return@setOnClickListener
+            val token = getSharedPreferences("auth", MODE_PRIVATE).getString("accessToken", null)
+                ?: return@setOnClickListener
             val isAdmin = getSharedPreferences("auth", MODE_PRIVATE).getBoolean("isAdmin", false)
 
             val request = AddEventRequest(
@@ -72,6 +90,10 @@ class AddscheduleActivity : AppCompatActivity() {
             RetrofitClient.instance.addEvent("Bearer $token", request)
                 .enqueue(object : Callback<BasicResponse> {
                     override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                        Log.d("Addschedule", "HTTP code: ${response.code()}")
+                        if (!response.isSuccessful) {
+                            Log.e("Addschedule", "Error body: ${response.errorBody()?.string()}")
+                        }
                         if (response.isSuccessful && response.body()?.success == true) {
                             Toast.makeText(
                                 this@AddscheduleActivity,
@@ -87,6 +109,7 @@ class AddscheduleActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+                        Log.e("Addschedule", "네트워크 오류", t)
                         Toast.makeText(this@AddscheduleActivity, "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })

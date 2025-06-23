@@ -26,13 +26,13 @@ interface ApiService {
     ): Call<UserInfoResponse>
 
     @GET("calendar")
-    fun getEvents(@Header("Authorization") token: String, @Query("date") date: String): Call<CalendarResponse>
+    fun getEvents(@Header("Authorization") token: String, @Query("day") date: String): Call<CalendarResponse>
 
     @GET("calendar/month")
     fun getMonthEvents(@Header("Authorization") token: String): Call<MonthResponse>
 
     @DELETE("calendar/{date-id}")
-    fun deleteEvent(@Header("Authorization") token: String, @Path("date-id") dateId: String): Call<BasicResponse>
+    fun deleteEvent(@Header("Authorization") token: String, @Path("date-id") dateId: Long): Call<BasicResponse>
 
     @POST("calendar/create")
     fun addEvent(

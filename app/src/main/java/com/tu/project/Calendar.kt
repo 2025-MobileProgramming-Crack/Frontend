@@ -28,6 +28,7 @@ data class CalendarResponse(
 )
 
 data class CalendarEvent(
+    val id: Long,
     val title: String,
     val description: String,
     val date: String  // ISO 형식 "2025-06-22T22:13:04.874Z"
