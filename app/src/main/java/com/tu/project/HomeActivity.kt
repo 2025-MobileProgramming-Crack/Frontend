@@ -41,10 +41,10 @@ class HomeActivity : AppCompatActivity() {
             finish()
         }
 
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        }
+//        findViewById<ImageView>(R.id.btnBack).setOnClickListener {
+//            startActivity(Intent(this, LoginActivity::class.java))
+//            finish()
+//        }
 
 
     }
