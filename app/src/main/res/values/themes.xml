@@ -5,9 +5,9 @@
     <style name="Base.Theme.Project" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- 전역 폰트 지정 -->
-        <item name="android:fontFamily">@font/uhbee_se_hyun_font</item>
+        <item name="android:fontFamily">@font/nanumsquareneo_brg</item>
         <!-- MaterialComponents 에도 적용하려면 아래도 -->
-        <item name="fontFamily">@font/uhbee_se_hyun_font</item>
+        <item name="fontFamily">@font/nanumsquareneo_brg</item>
     </style>
 
     <style name="Theme.Project" parent="Base.Theme.Project" />
