@@ -22,7 +22,7 @@ class MypageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMypageBinding.inflate(layoutInflater)  // 바인딩 인플레이트
+        binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         enableEdgeToEdge()
@@ -32,10 +32,7 @@ class MypageActivity : AppCompatActivity() {
             insets
         }
 
-        binding.btnLogout.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-
+        // 하단 네비게이션 바 버튼
         binding.home4.setOnClickListener {
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
@@ -49,24 +46,23 @@ class MypageActivity : AppCompatActivity() {
             finish()
         }
 
+        // 로그아웃 버튼
         binding.btnLogout.setOnClickListener {
-            // SharedPreferences 에 저장된 토큰 삭제
             val editor = getSharedPreferences("auth", MODE_PRIVATE).edit()
-            editor.clear()  // 모든 저장 데이터 삭제 (필요하면 accessToken, refreshToken만 remove()로 개별 삭제 가능)
+            editor.clear()
             editor.apply()
 
-            // 로그인 화면으로 이동
             startActivity(Intent(this, LoginActivity::class.java))
-
-            // 현재 액티비티 종료
             finish()
         }
 
-        // SharedPreferences에서 토큰 읽기
+        // 로그인 토큰 확인 후 사용자 정보 + 게시글 요청
         val accessToken = getSharedPreferences("auth", MODE_PRIVATE)
             .getString("accessToken", null)
 
         if (accessToken != null) {
+
+            // ✅ 사용자 정보 요청
             RetrofitClient.instance.getUserInfo("Bearer $accessToken")
                 .enqueue(object : Callback<UserInfoResponse> {
                     override fun onResponse(
@@ -81,7 +77,6 @@ class MypageActivity : AppCompatActivity() {
                                 binding.tvRegionPoints.text = "지역 : ${user.region} | 시루 포인트 : 9,000,000,000"
                                 Glide.with(this@MypageActivity)
                                     .load(user.profileImageUrl)
-                                    //.placeholder(R.drawable.ic_user_placeholder)
                                     .circleCrop()
                                     .into(binding.ivProfile)
                             }
@@ -94,6 +89,28 @@ class MypageActivity : AppCompatActivity() {
                         Toast.makeText(this@MypageActivity, "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
+
+            // ✅ 내가 올린 게시글 목록 요청
+            RetrofitClient.instance.getMyPosts("Bearer $accessToken")
+                .enqueue(object : Callback<MyPostResponse> {
+                    override fun onResponse(
+                        call: Call<MyPostResponse>,
+                        response: Response<MyPostResponse>
+                    ) {
+                        if (response.isSuccessful && response.body()?.success == true) {
+                            val posts = response.body()?.result ?: emptyList()
+                            binding.rvMyPosts.adapter = MyPostAdapter(posts)
+                            binding.rvMyPosts.layoutManager = LinearLayoutManager(this@MypageActivity)
+                        } else {
+                            Toast.makeText(this@MypageActivity, "게시글을 불러오지 못했습니다", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<MyPostResponse>, t: Throwable) {
+                        Toast.makeText(this@MypageActivity, "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+
         } else {
             Toast.makeText(this, "로그인이 필요합니다", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, LoginActivity::class.java))

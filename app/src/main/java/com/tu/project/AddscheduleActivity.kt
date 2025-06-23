@@ -75,7 +75,8 @@ class AddscheduleActivity : AppCompatActivity() {
                         if (response.isSuccessful && response.body()?.success == true) {
                             Toast.makeText(
                                 this@AddscheduleActivity,
-                                if (isAdmin) "전체 사용자에게 일정이 추가되었습니다." else "일정이 추가되었습니다.",
+                                //if (isAdmin) "전체 사용자에게 일정이 추가되었습니다." else
+                                "일정이 추가되었습니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
                             startActivity(Intent(this@AddscheduleActivity, CalendarActivity::class.java))

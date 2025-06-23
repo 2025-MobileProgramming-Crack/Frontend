@@ -1,10 +1,12 @@
 package com.tu.project
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -20,7 +22,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,6 +62,14 @@ class ParticipateActivity : AppCompatActivity() {
 
         // 닫기
         findViewById<ImageButton>(R.id.btnClose).setOnClickListener { finish() }
+
+        findViewById<TextView>(R.id.btnConfirm).setOnClickListener {
+            // TODO: 제목, 내용 등 유효성 검사 필요시 추가
+
+            val intent = Intent(this, ContestActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         // 갤러리에서 이미지 선택 콜백
         pickImageLauncher = registerForActivityResult(
@@ -98,7 +118,48 @@ class ParticipateActivity : AppCompatActivity() {
         // “업로드” 버튼 클릭
         findViewById<MaterialButton>(R.id.btnUpload).setOnClickListener {
             selectedImageUri?.let { uri ->
-                // TODO: 서버에 업로드할 코드를 작성해주세요
+                val title = findViewById<EditText>(R.id.etTitle).text.toString()
+                val content = findViewById<EditText>(R.id.etContent).text.toString()
+
+                if (title.isBlank() || content.isBlank()) {
+                    Toast.makeText(this, "제목과 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r", null) ?: return@setOnClickListener
+                val file = File(cacheDir, "upload_image.jpg")
+                val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+                val outputStream = FileOutputStream(file)
+                inputStream.copyTo(outputStream)
+
+                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+                val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+                val titlePart = title.toRequestBody("text/plain".toMediaTypeOrNull())
+                val contentPart = content.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val sharedPref = getSharedPreferences("auth", MODE_PRIVATE)
+                val accessToken = sharedPref.getString("accessToken", null)
+
+                RetrofitClient.instance.uploadPost(
+                    token = "Bearer $accessToken",
+                    title = titlePart,
+                    content = contentPart,
+                    image = body
+                ).enqueue(object : Callback<UploadResponse> {
+                    override fun onResponse(call: Call<UploadResponse>, response: Response<UploadResponse>) {
+                        if (response.isSuccessful && response.body()?.success == true) {
+                            Toast.makeText(this@ParticipateActivity, "업로드 성공!", Toast.LENGTH_SHORT).show()
+                            finish()
+                        } else {
+                            Toast.makeText(this@ParticipateActivity, "업로드 실패: ${response.body()?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
+                        Toast.makeText(this@ParticipateActivity, "에러: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+
             } ?: Toast.makeText(this, "먼저 이미지를 선택하거나 촬영하세요.", Toast.LENGTH_SHORT).show()
         }
 
