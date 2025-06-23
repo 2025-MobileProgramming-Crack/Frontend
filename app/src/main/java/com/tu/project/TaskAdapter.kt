@@ -3,12 +3,12 @@ package com.tu.project.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.tu.project.CalendarEvent
 import com.tu.project.databinding.ItemTaskBinding
-import com.tu.project.model.ScheduleItem
 
 class TaskAdapter(
-    private var taskList: List<ScheduleItem>,
-    private val onDeleteClick: (ScheduleItem) -> Unit
+    private var taskList: List<CalendarEvent>,
+    private val onDeleteClick: (CalendarEvent) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     inner class TaskViewHolder(val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root)
@@ -33,7 +33,7 @@ class TaskAdapter(
 
     override fun getItemCount(): Int = taskList.size
 
-    fun updateTasks(newTasks: List<ScheduleItem>) {
+    fun updateTasks(newTasks: List<CalendarEvent>) {
         taskList = newTasks
         notifyDataSetChanged()
     }
