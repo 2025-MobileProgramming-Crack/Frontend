@@ -56,14 +56,14 @@
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
-            android:exported="true">
+            android:exported="false">
             <!--            처음 앱 시작시에 보이는 화면-->
             <!--            개발 진행할 때에만 HomeActivity로 진행하고 추후엔 MainActivity로 실행-->
             <!--            추후 아래 intent filter 코드 삭제 + android:exported="false"로 변경해주기-->
-                    <intent-filter>
-                        <action android:name="android.intent.action.MAIN" />
-                        <category android:name="android.intent.category.LAUNCHER" />
-                    </intent-filter>
+<!--                    <intent-filter>-->
+<!--                        <action android:name="android.intent.action.MAIN" />-->
+<!--                        <category android:name="android.intent.category.LAUNCHER" />-->
+<!--                    </intent-filter>-->
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -73,11 +73,11 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

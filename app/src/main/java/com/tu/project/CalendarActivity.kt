@@ -3,6 +3,7 @@ package com.tu.project
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -108,8 +109,13 @@ class CalendarActivity : AppCompatActivity() {
 
     private fun deleteEvent(event: CalendarEvent) {
         val token = getSharedPreferences("auth", MODE_PRIVATE).getString("accessToken", null) ?: return
-        RetrofitClient.instance.deleteEvent("Bearer $token", event.date).enqueue(object : Callback<BasicResponse> {
+        Log.d("DeleteEvent", "token: $token, id: ${event.id}")
+
+        RetrofitClient.instance.deleteEvent("Bearer $token", event.id).enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                val errorBody = response.errorBody()?.string()
+                Log.d("DeleteEvent", "response code: ${response.code()}, errorBody: $errorBody")
+
                 if (response.isSuccessful && response.body()?.success == true) {
                     taskList.remove(event)
                     taskAdapter.notifyDataSetChanged()
@@ -118,8 +124,10 @@ class CalendarActivity : AppCompatActivity() {
                     Toast.makeText(this@CalendarActivity, "삭제 실패", Toast.LENGTH_SHORT).show()
                 }
             }
+
             override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
-                Toast.makeText(this@CalendarActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                Log.e("DeleteEvent", "onFailure: ${t.message}", t)
+                Toast.makeText(this@CalendarActivity, "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
