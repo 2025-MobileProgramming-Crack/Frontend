@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingVertical="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#FBEEDB"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivTopImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Top Image" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvTopTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="제목"
+        android:textColor="#131316"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvTopUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@작성자 | 123 likes"
+        android:textColor="#6D6F7E"
+        android:textSize="14sp" />
+</LinearLayout>

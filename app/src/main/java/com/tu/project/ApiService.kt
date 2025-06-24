@@ -49,8 +49,16 @@ interface ApiService {
         @Part image: MultipartBody.Part
     ): Call<UploadResponse>
 
-    @GET("/post/mine")
+    @GET("/post/myPosts")
     fun getMyPosts(
         @Header("Authorization") token: String
     ): Call<MyPostResponse>
+
+    @GET("/post/all")
+    fun getAllPosts(): Call<FeedPostResponse>
+
+    @GET("/post/all/like")
+    fun getTopLikedPosts(): Call<LikeTopPostResponse>
 }
+
+

@@ -3,6 +3,7 @@ package com.tu.project
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.tu.project.R
 import com.tu.project.databinding.ActivityMypageBinding
@@ -74,7 +76,7 @@ class MypageActivity : AppCompatActivity() {
                             if (user != null) {
                                 binding.tvNickname.text = user.username
                                 binding.tvEmail.text = user.email
-                                binding.tvRegionPoints.text = "지역 : ${user.region} | 시루 포인트 : 9,000,000,000"
+                                binding.tvRegionPoints.text = "지역 : ${user.region}"
                                 Glide.with(this@MypageActivity)
                                     .load(user.profileImageUrl)
                                     .circleCrop()
@@ -97,8 +99,12 @@ class MypageActivity : AppCompatActivity() {
                         call: Call<MyPostResponse>,
                         response: Response<MyPostResponse>
                     ) {
+                        Log.e("MyPage", "응답 코드: ${response.code()}")
+                        Log.e("MyPage", "응답 body: ${response.body()}")
+                        Log.e("MyPage", "전체 응답: ${response.errorBody()?.string()}")
                         if (response.isSuccessful && response.body()?.success == true) {
                             val posts = response.body()?.result ?: emptyList()
+                            Log.d("MyPage", "posts: $posts") // null 또는 size 0?
                             binding.rvMyPosts.adapter = MyPostAdapter(posts)
                             binding.rvMyPosts.layoutManager = LinearLayoutManager(this@MypageActivity)
                         } else {

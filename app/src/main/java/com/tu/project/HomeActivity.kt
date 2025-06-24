@@ -1,5 +1,6 @@
 package com.tu.project
 
+import ContestActivity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +15,7 @@ import com.tu.project.R
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val token = getSharedPreferences("auth", MODE_PRIVATE).getString("accessToken", null)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -45,8 +47,6 @@ class HomeActivity : AppCompatActivity() {
 //            startActivity(Intent(this, LoginActivity::class.java))
 //            finish()
 //        }
-
-
     }
 
 
