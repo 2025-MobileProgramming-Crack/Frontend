@@ -1,6 +1,6 @@
 package com.tu.project
 
-import ContestActivity
+import com.tu.project.ContestActivity
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager

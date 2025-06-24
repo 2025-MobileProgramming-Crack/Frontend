@@ -18,9 +18,24 @@ import com.tu.project.databinding.ActivityMypageBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import androidx.activity.result.contract.ActivityResultContracts
 
 class MypageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMypageBinding  // 뷰바인딩 객체 선언
+
+    // 갤러리에서 이미지 선택 런처
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            Glide.with(this)
+                .load(it)
+                .circleCrop()
+                .into(binding.ivProfile)
+            // 갤러리 아이콘 숨기기
+            binding.ivGalleryIcon.visibility = android.view.View.GONE
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +71,11 @@ class MypageActivity : AppCompatActivity() {
 
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
+        }
+
+        // 프로필 이미지 클릭 시 갤러리 오픈
+        binding.ivProfile.setOnClickListener {
+            pickImageLauncher.launch("image/*")
         }
 
         // 로그인 토큰 확인 후 사용자 정보 + 게시글 요청

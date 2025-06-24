@@ -1,3 +1,4 @@
+package com.tu.project
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -60,6 +61,11 @@ class ContestActivity : AppCompatActivity() {
                         Glide.with(this@ContestActivity)
                             .load(post.imageUrl)
                             .into(itemBinding.ivTopImage)
+
+                        // 동적으로 이미지가 있으면 배경을 투명하게
+                        if (!post.imageUrl.isNullOrEmpty()) {
+                            itemBinding.flTopImageContainer.setBackgroundResource(android.R.color.transparent)
+                        }
 
                         binding.llTop3List.addView(itemBinding.root)
                     }

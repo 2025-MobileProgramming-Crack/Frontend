@@ -27,8 +27,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
 
 <!--                상단에 뒤로가기 버튼 -> 필요 없어서 삭제-->
 <!--                <ImageButton-->
@@ -57,121 +57,50 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_bell"
+                    android:layout_marginEnd="20dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="알림" />
             </RelativeLayout>
 
-            <!-- 달력 네비게이션 -->
-            <LinearLayout
+            <!-- 실제 달력 CalendarView 추가 -->
+            <CalendarView
+                android:id="@+id/calendarViewHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="8dp">
-
-                <ImageButton
-                    android:id="@+id/btnPrevMonth"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="이전 달" />
-
-                <TextView
-                    android:id="@+id/tvMonth"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="May 2024"
-                    android:textColor="#121316"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <ImageButton
-                    android:id="@+id/btnNextMonth"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="다음 달" />
-            </LinearLayout>
-
-            <!-- 요일 헤더 -->
-
-            <!-- 날짜 그리드 -->
-            <GridLayout
-                android:id="@+id/calendarGrid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="7"
-                android:rowCount="6"
-                android:padding="16dp">
-                <!-- TODO: 날짜 버튼 동적 생성 -->
-            </GridLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
 
             <!-- 오늘의 할일 -->
             <TextView
                 android:id="@+id/tvTasksHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="24dp"
+                android:paddingStart="30dp"
+                android:paddingRight="8dp"
                 android:text="오늘의 할일"
                 android:textColor="#121316"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
-            <LinearLayout
+
+            <!-- 동적 오늘의 할일 리스트 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTasksHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="8dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingVertical="12dp"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="이벤트 아이콘" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="14:00 공부하기"
-                        android:textColor="#121316"
-                        android:textSize="16sp" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingVertical="12dp"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="이벤트 아이콘" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="18:00 헬스장 가기"
-                        android:textColor="#121316"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </LinearLayout>
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="8dp"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
 
             <!-- 진행중인 사진 콘테스트 -->
             <TextView
                 android:id="@+id/tvContestHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
+                android:paddingStart="30dp"
                 android:paddingTop="24dp"
+                android:paddingBottom="5dp"
                 android:text="진행중인 사진 콘테스트"
                 android:textColor="#131316"
                 android:textSize="18sp"
@@ -180,10 +109,11 @@
                 android:id="@+id/scrollContest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
+                android:paddingStart="30dp"
                 android:paddingTop="8dp"
-                android:paddingEnd="16dp"
-                android:scrollbars="none">
+                android:paddingEnd="30dp"
+                android:scrollbars="none"
+                android:paddingBottom="24dp">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -197,20 +127,20 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:background="#FBEEDB">
+                            android:background="@android:color/transparent">
                             <ImageView
                                 android:id="@+id/contest1"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/contest1"
-                                android:contentDescription="배곧 술먹기 행사"
+                                android:src="@drawable/baegot_event"
+                                android:contentDescription="배곧 생명 공원을 찾아랏 행사"
                                 android:scaleType="centerCrop" />
                         </FrameLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="배곧 술먹기 행사"
+                            android:text="배곧 생명 공원을 찾아랏 행사"
                             android:textColor="#131316"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -223,19 +153,19 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:background="#DFF0E8">
+                            android:background="@android:color/transparent">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/contest2"
-                                android:contentDescription="정왕 술 왕창 먹기 행사"
+                                android:src="@drawable/oido_event"
+                                android:contentDescription="오이도에서 해로와 토로 찾기"
                                 android:scaleType="centerCrop" />
                         </FrameLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="정왕 술 왕창 먹기 행사"
+                            android:text="오이도에서 해로와 토로 찾기"
                             android:textColor="#131316"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -247,18 +177,19 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:background="#F0EDEC">
+                            android:background="@android:color/transparent">
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:contentDescription="학교 티노랜드"
+                                android:src="@drawable/tino_event"
+                                android:contentDescription="티노랜드에 오신 걸 환영합니다"
                                 android:scaleType="centerCrop" />
                         </FrameLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="학교 티노랜드"
+                            android:text="티노랜드에 오신 걸 환영합니다"
                             android:textColor="#131316"
                             android:textSize="14sp" />
                     </LinearLayout>
